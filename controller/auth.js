@@ -1,0 +1,138 @@
+const Faculty = require("../Schema/Faculty.js");
+const Student = require("../Schema/Student.js");
+const bcrypt = require("bcrypt");
+const CustomError = require("../utils/error.js");
+var JWT = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
+
+const signup = async (req, res, next) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      startingYear,
+      passingYear,
+      branch,
+      studentId,
+    } = req.body;
+    console.log(
+      "server  reg ",
+      name,
+      email,
+      password,
+      startingYear,
+      passingYear,
+      branch,
+      studentId
+    );
+
+    const existingFaculty = await Student.findOne({ email });
+    if (existingFaculty) {
+      return next(CustomError(404, "Student Already Exists"));
+    }
+
+    // const existingID = await Student.findOne({ studentId });
+    // if (existingID) {
+    //   return next(CustomError(404, "Student ID Already Exists"));
+    // }
+
+    var salt = bcrypt.genSaltSync(10);
+    var hash = bcrypt.hashSync(password, salt);
+
+    const newStudent = new Student({
+      name,
+      email,
+      password,
+      startingYear,
+      passingYear,
+      branch,
+      studentId,
+    });
+
+    await newStudent.save();
+    res
+      .status(200)
+      .send({ message: "Student created successfully!!", data: newStudent });
+    console.log("Student  created successfully");
+  } catch (error) {
+    console.log(error);
+    next(error); // Pass the error to Express error handling middleware
+  }
+};
+
+const signin = async (req, res, next) => {
+  try {
+    const { email, password, currentYear, year } = req.body;
+
+    // validation
+    if (!email || !password || !currentYear || !year) {
+      throw new CustomError("Please fill all the fields", 400);
+    }
+
+    const studentDetail = await Student.findOne({ email });
+
+    console.log("hello world");
+    if (!studentDetail) {
+      throw new CustomError("Invalid credentials", 400);
+    }
+
+    // if (!Faculty) return next(createError(404, "Faculty not found!!"));
+    // console.log(Faculty);
+
+    const pass = await bcrypt.compare(password, studentDetail.password);
+    if (!pass) {
+      throw new CustomError("Invalid credentials", 400);
+    }
+    // if (!pass) return next(createError(400, "Wrong Credentials"));
+
+    const token = JWT.sign({ id: studentDetail._id }, process.env.JWT_SECRET);
+    const { ...otherDetails } = studentDetail._doc;
+
+    console.log("logged in sucess");
+    res
+      .cookie("access_token", token, { httpOnly: true })
+      .status(200)
+      .json({ token, ...otherDetails });
+    console.log(token);
+  } catch (error) {
+    next(error);
+  }
+};
+const getAllStudents = async (req, res, next) => {
+  try {
+    const Facultys = await Student.find();
+    if (Facultys.length === 0) {
+      throw new CustomError("Faculty not found", 400);
+    } else {
+      res.status(200).json(Facultys);
+    }
+  } catch (error) {
+    // console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+    // next(error);
+  }
+};
+const getStudent = async (req, res, next) => {
+  try {
+    const Faculty = await Student.findById(req.params.id);
+    if (Faculty.length === 0) {
+      throw new CustomError("Faculty not found", 400);
+    } else {
+      res.status(200).json(Faculty);
+    }
+  } catch (error) {
+    // console.log("Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+    // next(error);
+  }
+};
+
+// Export both functions as an object
+module.exports = {
+  signin,
+  signup,
+  getAllStudents,
+  getStudent,
+};
