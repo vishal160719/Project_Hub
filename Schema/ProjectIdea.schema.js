@@ -59,7 +59,7 @@ const ProjectIdeaSchema = new Schema(
       required: [true, "Academic Year is required"],
     },
     semester: {
-      type: String,
+      type: Number,
       trim: true,
       required: [true, "Semester is required"],
     },
@@ -70,11 +70,11 @@ const ProjectIdeaSchema = new Schema(
     },
     // it is the key used to map one to many project ideas from the group
     groupId: {
-      type: {
+      type: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Group", // Reference to the User model
-      },
-      required: [true, "groupId is required"],
+        ref: "Group", // Reference to the Group model
+        required: true,
+      }],
     },
     isApproved: {
       // should be done by faculty only
@@ -85,8 +85,8 @@ const ProjectIdeaSchema = new Schema(
       type: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Faculty",
+        default:null,
       },
-      default: null,
     },
     facultyName: {
       type: String,
