@@ -70,11 +70,9 @@ const ProjectIdeaSchema = new Schema(
     },
     // it is the key used to map one to many project ideas from the group
     groupId: {
-      type: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Group", // Reference to the Group model
+        ref: "Group", // Re ference to the Group model
         required: true,
-      }],
     },
     isApproved: {
       // should be done by faculty only

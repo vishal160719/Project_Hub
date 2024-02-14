@@ -66,10 +66,13 @@ const getAllProject = async (req, res, next) => {
 
 const updateProject= async (req, res, next) => {
   try {
+    const projectId = req.params.id;
+    console.log("==>",projectId);
+    console.log(req.body);
     const updatedProjectIdea = await ProjectIdea.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true } // Add runValidators option to validate schema
     );
 
     if (!updatedProjectIdea) {
@@ -111,11 +114,13 @@ const updateProjectStatus = async (req, res, next) => {
     try {
       // Get project id
       const projectId = req.params.id;
+      console.log(projectId);
+      console.log(req.body);
       // her we have to set the faculty id once the project get approved and status become false
   
       const updateProjectStatus = await ProjectIdea.findByIdAndUpdate(
         projectId,
-        { $set: { isApproved: req.body.status, facultyId: req.body.facultyId } },
+        { $set: { isApproved: req.body.isApproved, facultyId: req.body.facultyId , facultyName:req.body.facultyName ,groupId:req.body.groupId } },
         { new: true } // Return modified document
       );
   
