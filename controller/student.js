@@ -59,9 +59,10 @@ const deleteStudent = async (req, res, next) => {
   }
 };
 
+
 // Export both functions as an object
 module.exports = {
   createStudent,
   updateStudent,
-  deleteStudent,
+  deleteStudent
 };

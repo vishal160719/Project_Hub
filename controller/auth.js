@@ -131,10 +131,39 @@ const getStudent = async (req, res, next) => {
   }
 };
 
+const getStudentNameById = async (req, res, next) => {
+  try {
+    // Extract the student ID from the request parameters
+    const studentId = req.query.studentId;
+
+    console.log("Received student ID:", studentId);
+
+    // Find the student by their student ID
+    const student = await Student.findOne({ studentId });
+
+    console.log("Found student:", student);
+
+    // If no student is found with the provided student ID, return a 404 error
+    if (!student) {
+      return next(CustomError(404, "Student not found"));
+    }
+
+    // Extract and send the student's name in the response
+    const { name , _id} = student;
+    res.status(200).json({ name , _id });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error("Error:", error);
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
+
+
 // Export both functions as an object
 module.exports = {
   signin,
   signup,
   getAllStudents,
   getStudent,
+  getStudentNameById
 };

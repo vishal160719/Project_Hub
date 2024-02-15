@@ -12,6 +12,8 @@ const {
   getAllGroup,
   updateStatus,
   delGroup,
+  getGroup,
+  getGroupsByCriteria
   //   getProject,
   //   delProject,
   //   updStatus,
@@ -21,7 +23,8 @@ const {
   //   getSemesterProject,
 } = require("../controller/group.controller.js");
 
-router.get("/getAll", checkFaculty, getAllGroup);
+router.get("/getAll", getAllGroup);
+router.get("/getGroups", getGroupsByCriteria);
 // router.get("/getApproved", getApproved);
 // router.get("/get/:id", getProject);
 // router.get("/get/user/:id", getUserProject);
@@ -29,9 +32,12 @@ router.get("/getAll", checkFaculty, getAllGroup);
 // get semester project
 // router.get("/get/project/sem", getSemesterProject);
 
-router.post("/add", verifyToken, addGroup); // here i have to check user too
+router.post("/add", addGroup); // here i have to check user too
+// router.post("/getAll", getAllGroup); // here i have to check user too
+// router.post("/getAll", getAllGroup); // here i have to check user too
+router.get("/get/:id", getGroup); // here i have to check user too
 router.put("/updateStatus/:id", checkFaculty, updateStatus);
-router.put("/updateStatus/:id", checkFaculty, updateStatus);
+// router.put("/updateStatus/:id", checkFaculty, updateStatus);
 // router.put("/upd/status/:id/status", updStatus);
 router.delete("/del/:id", checkFaculty, delGroup); // checkUser must be there
 // router.put("/upd/:id", updProject);
