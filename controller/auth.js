@@ -39,12 +39,13 @@ const signup = async (req, res, next) => {
     // }
 
     var salt = bcrypt.genSaltSync(10);
+    console.log(salt);
     var hash = bcrypt.hashSync(password, salt);
 
     const newStudent = new Student({
       name,
       email,
-      password,
+      password: hash,
       startingYear,
       passingYear,
       branch,
@@ -55,7 +56,7 @@ const signup = async (req, res, next) => {
     res
       .status(200)
       .send({ message: "Student created successfully!!", data: newStudent });
-    console.log("Student  created successfully");
+    console.log("Student created successfully");
   } catch (error) {
     console.log(error);
     next(error); // Pass the error to Express error handling middleware
@@ -68,14 +69,14 @@ const signin = async (req, res, next) => {
 
     // validation
     if (!email || !password || !currentYear || !year) {
-      throw new CustomError("Please fill all the fields", 400);
+      throw CustomError("Please fill all the fields", 400);
     }
 
     const studentDetail = await Student.findOne({ email });
 
-    console.log("hello world");
+    // console.log("hello world");
     if (!studentDetail) {
-      throw new CustomError("Invalid credentials", 400);
+      throw CustomError("Invalid credentials", 400);
     }
 
     // if (!Faculty) return next(createError(404, "Faculty not found!!"));
@@ -83,7 +84,8 @@ const signin = async (req, res, next) => {
 
     const pass = await bcrypt.compare(password, studentDetail.password);
     if (!pass) {
-      throw new CustomError("Invalid credentials", 400);
+      throw CustomError("Invalid credentials", 400);
+      console.log("Credential invalid");
     }
     // if (!pass) return next(createError(400, "Wrong Credentials"));
 
@@ -104,7 +106,7 @@ const getAllStudents = async (req, res, next) => {
   try {
     const Facultys = await Student.find();
     if (Facultys.length === 0) {
-      throw new CustomError("Faculty not found", 400);
+      throw CustomError("Faculty not found", 400);
     } else {
       res.status(200).json(Facultys);
     }
@@ -118,7 +120,7 @@ const getStudent = async (req, res, next) => {
   try {
     const Faculty = await Student.findById(req.params.id);
     if (Faculty.length === 0) {
-      throw new CustomError("Faculty not found", 400);
+      throw CustomError("Faculty not found", 400);
     } else {
       res.status(200).json(Faculty);
     }
