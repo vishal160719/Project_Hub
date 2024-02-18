@@ -13,14 +13,14 @@ const groupSchema = new Schema(
     membersId: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
+          type: [String],
           ref: "Student", // Reference to the User model
         },
       ],
       required: true,
     },
     groupLeaderId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [String],
       ref: "Student", // Reference to the User model
       required: [true, "groupLeaderId is required"],
     },

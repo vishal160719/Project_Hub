@@ -67,6 +67,8 @@ const signin = async (req, res, next) => {
   try {
     const { email, password, currentYear, year } = req.body;
 
+    console.log("Request Body:", req.body);
+
     // validation
     if (!email || !password || !currentYear || !year) {
       throw CustomError("Please fill all the fields", 400);
@@ -74,31 +76,30 @@ const signin = async (req, res, next) => {
 
     const studentDetail = await Student.findOne({ email });
 
-    // console.log("hello world");
+    console.log("Student Detail:", studentDetail);
+
     if (!studentDetail) {
       throw CustomError("Invalid credentials", 400);
     }
 
-    // if (!Faculty) return next(createError(404, "Faculty not found!!"));
-    // console.log(Faculty);
-
     const pass = await bcrypt.compare(password, studentDetail.password);
+    console.log("Password Comparison Result:", pass);
+
     if (!pass) {
       throw CustomError("Invalid credentials", 400);
-      console.log("Credential invalid");
     }
-    // if (!pass) return next(createError(400, "Wrong Credentials"));
 
-    const token = JWT.sign({ id: studentDetail._id }, process.env.JWT_SECRET);
+    const token = JWT.sign({ id: studentDetail._id }, process.env.JWT);
     const { ...otherDetails } = studentDetail._doc;
 
-    console.log("logged in sucess");
+    console.log("Logged in successfully");
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
       .json({ token, ...otherDetails });
-    console.log(token);
+    console.log("Token:", token);
   } catch (error) {
+    console.error("Error in signin controller:", error);
     next(error);
   }
 };

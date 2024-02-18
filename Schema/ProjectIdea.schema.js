@@ -45,7 +45,7 @@ const ProjectIdeaSchema = new Schema(
       required: [true, "title is required"],
     },
     pdfLinks: {
-      type: [String],
+      type: String,
       default: [],
     },
     currentYear: {
