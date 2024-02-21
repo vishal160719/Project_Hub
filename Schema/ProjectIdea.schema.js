@@ -45,7 +45,7 @@ const ProjectIdeaSchema = new Schema(
       required: [true, "title is required"],
     },
     pdfLinks: {
-      type: String,
+      type: [String],
       default: [],
     },
     currentYear: {
@@ -70,9 +70,9 @@ const ProjectIdeaSchema = new Schema(
     },
     // it is the key used to map one to many project ideas from the group
     groupId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Group", // Re ference to the Group model
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Group", // Re ference to the Group model
+      required: true,
     },
     isApproved: {
       // should be done by faculty only
@@ -83,7 +83,7 @@ const ProjectIdeaSchema = new Schema(
       type: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Faculty",
-        default:null,
+        default: null,
       },
     },
     facultyName: {

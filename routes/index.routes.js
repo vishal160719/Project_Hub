@@ -6,7 +6,7 @@ const subjectRoutes = require("./subject.js");
 const facultyRoutes = require("./facultyAuth.js");
 const groupRoutes = require("./group.routes.js");
 const projectIdeaRoutes = require("./projectIdea.routes.js");
-const task = require("./task.routes.js")
+const task = require("./task.routes.js");
 
 const router = Router();
 router.use("/auth", authRoutes);

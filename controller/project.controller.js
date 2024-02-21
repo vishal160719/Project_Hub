@@ -47,27 +47,27 @@ const getAllProject = async (req, res, next) => {
   }
 };
 
-// const getProjectIdea = async (req, res, next) => {
-//   try {
-//     const projectIdea = await ProjectIdea.findById(req.params.id);
+const getProjectByGroupId = async (req, res, next) => {
+  try {
+    const projectIdeas = await ProjectIdea.find({ groupId: req.params.id });
 
-//     if (!projectIdea) {
-//       return next(CustomError(404, "Project Idea not found"));
-//     }
+    if (!projectIdeas) {
+      return next(CustomError(404, "Project Idea not found"));
+    }
 
-//     res.status(200).json({
-//       message: "Project Idea fetched successfully",
-//       data: projectIdea,
-//     });
-//   } catch (error) {
-//     next(CustomError(500, error.message || "Internal Server Error"));
-//   }
-// };
+    res.status(200).json({
+      message: "Project Idea fetched successfully",
+      data: projectIdeas,
+    });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
 
-const updateProject= async (req, res, next) => {
+const updateProject = async (req, res, next) => {
   try {
     const projectId = req.params.id;
-    console.log("==>",projectId);
+    console.log("==>", projectId);
     console.log(req.body);
     const updatedProjectIdea = await ProjectIdea.findByIdAndUpdate(
       req.params.id,
@@ -111,38 +111,45 @@ const delProject = async (req, res, next) => {
 };
 
 const updateProjectStatus = async (req, res, next) => {
-    try {
-      // Get project id
-      const projectId = req.params.id;
-      console.log(projectId);
-      console.log(req.body);
-      // her we have to set the faculty id once the project get approved and status become false
-  
-      const updateProjectStatus = await ProjectIdea.findByIdAndUpdate(
-        projectId,
-        { $set: { isApproved: req.body.isApproved, facultyId: req.body.facultyId , facultyName:req.body.facultyName ,groupId:req.body.groupId } },
-        { new: true } // Return modified document
-      );
-  
-      if (updateProjectStatus) {
-        res.status(200).json({
-          success: true,
-          message: "Project Status Updated Successfully",
-          data: updateProjectStatus, // Corrected variable name here
-        });
-      } else {
-        res.status(404).json({ success: false, message: "Project not found" });
-      }
-    } catch (error) {
-      next(CustomError(500, error));
-    }
-  };
+  try {
+    // Get project id
+    const projectId = req.params.id;
+    console.log(projectId);
+    console.log(req.body);
+    // her we have to set the faculty id once the project get approved and status become false
 
+    const updateProjectStatus = await ProjectIdea.findByIdAndUpdate(
+      projectId,
+      {
+        $set: {
+          isApproved: req.body.isApproved,
+          facultyId: req.body.facultyId,
+          facultyName: req.body.facultyName,
+          groupId: req.body.groupId,
+        },
+      },
+      { new: true } // Return modified document
+    );
+
+    if (updateProjectStatus) {
+      res.status(200).json({
+        success: true,
+        message: "Project Status Updated Successfully",
+        data: updateProjectStatus, // Corrected variable name here
+      });
+    } else {
+      res.status(404).json({ success: false, message: "Project not found" });
+    }
+  } catch (error) {
+    next(CustomError(500, error));
+  }
+};
 
 module.exports = {
   addProject,
   getAllProject,
   updateProject,
   delProject,
-  updateProjectStatus
+  updateProjectStatus,
+  getProjectByGroupId,
 };

@@ -89,7 +89,7 @@ const signin = async (req, res, next) => {
       throw CustomError("Invalid credentials", 400);
     }
 
-    const token = JWT.sign({ id: studentDetail._id }, process.env.JWT);
+    const token = JWT.sign({ id: studentDetail._id }, process.env.JWT_SECRET);
     const { ...otherDetails } = studentDetail._doc;
 
     console.log("Logged in successfully");
@@ -150,8 +150,8 @@ const getStudentNameById = async (req, res, next) => {
     }
 
     // Extract and send the student's name in the response
-    const { name , _id} = student;
-    res.status(200).json({ name , _id });
+    const { name, _id } = student;
+    res.status(200).json({ name, _id });
   } catch (error) {
     // Handle any errors that occur during the process
     console.error("Error:", error);
@@ -159,12 +159,11 @@ const getStudentNameById = async (req, res, next) => {
   }
 };
 
-
 // Export both functions as an object
 module.exports = {
   signin,
   signup,
   getAllStudents,
   getStudent,
-  getStudentNameById
+  getStudentNameById,
 };

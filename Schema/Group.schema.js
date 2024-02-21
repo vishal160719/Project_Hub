@@ -20,7 +20,7 @@ const groupSchema = new Schema(
       required: true,
     },
     groupLeaderId: {
-      type: [String],
+      type: String,
       ref: "Student", // Reference to the User model
       required: [true, "groupLeaderId is required"],
     },

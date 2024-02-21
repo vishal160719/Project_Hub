@@ -28,6 +28,7 @@ const addGroup = async (req, res, next) => {
       next(CustomError(500, "Group Already Exist Already exist"));
     } else {
       const groupDetails = await new Group({
+        // ...groupData,
         groupName,
         membersId,
         groupLeaderId,
@@ -48,8 +49,6 @@ const addGroup = async (req, res, next) => {
     next(CustomError(500, error));
   }
 };
-
-
 
 // getAllproject Video
 const getAllGroup = async (req, res, next) => {
@@ -137,7 +136,7 @@ const delGroup = async (req, res, next) => {
 
 const getGroupsByCriteria = async (req, res, next) => {
   try {
-    const { currentYear, semester, academicYear, subject } = req.query;
+    const { currentYear, semester, academicYear, subject } = req.params;
 
     // Construct the query object based on the provided criteria
     const query = {};
@@ -149,14 +148,47 @@ const getGroupsByCriteria = async (req, res, next) => {
     if (subject) query.subject = subject;
 
     // Add criteria for isProjectApproved and projectStatus
-    query.isProjectApproved = true;
-    query.projectStatus = "Approved";
+    // query.isProjectApproved = true;
+    // query.projectStatus = "Approved";
 
     // Find groups matching all the provided criteria
     const groups = await Group.find(query).lean();
 
     if (!groups || groups.length === 0) {
-      return next(CustomError(404, "No groups found for the provided criteria"));
+      return next(
+        CustomError(404, "No groups found for the provided criteria")
+      );
+    }
+
+    res.status(200).json({
+      message: "Groups fetched successfully",
+      data: groups,
+    });
+  } catch (error) {
+    next(CustomError(500, error));
+  }
+};
+const getGroupWithId = async (req, res, next) => {
+  try {
+    let { semester, memberId } = req.params;
+    semester = parseInt(semester); // Convert to integer if necessary
+    memberId = memberId.trim().toString(); // Trim memberId and parse to string
+    console.log(semester, memberId);
+
+    const query = {
+      semester: semester,
+      membersId: {
+        $elemMatch: { $eq: [memberId] },
+      },
+    };
+    console.log("Query:", JSON.stringify(query));
+
+    const groups = await Group.find(query).lean();
+
+    if (!groups || groups.length === 0) {
+      return next(
+        CustomError(404, "No groups found for the provided criteria")
+      );
     }
 
     res.status(200).json({
@@ -168,7 +200,6 @@ const getGroupsByCriteria = async (req, res, next) => {
   }
 };
 
-
 // Export both functions as an object
 module.exports = {
   addGroup,
@@ -176,5 +207,6 @@ module.exports = {
   getGroup,
   updateStatus,
   delGroup,
-  getGroupsByCriteria
+  getGroupsByCriteria,
+  getGroupWithId,
 };

@@ -71,7 +71,7 @@ const signin = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: existingfaculty._id.toString() },
-      process.env.JWT
+      process.env.JWT_SECRET
     );
     const { ...otherDetails } = existingfaculty._doc;
 
