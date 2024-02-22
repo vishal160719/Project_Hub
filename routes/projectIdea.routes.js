@@ -31,7 +31,7 @@ router.get("/getAll", getAllProject);
 
 router.post("/add", addProject); // here i have to check user too
 router.put("/update/:id", updateProject);
-router.put("/updateProjectStatus/:id", updateProjectStatus);
+router.put("/updateProjectStatus/:id/:status", updateProjectStatus);
 router.get("/getProjByGroupId/:id", getProjectByGroupId);
 // router.put("/upd/status/:id/status", updStatus);
 router.delete("/del/:id", delProject); // checkUser must be there
