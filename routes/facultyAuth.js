@@ -3,6 +3,8 @@ const {
   signup,
   signin,
   delFaculty,
+  getFacultyByEmail,
+  getFacultyNameList,
 } = require("../controller/facultyController");
 const { verifyToken, checkAdmin } = require("../middleware/auth.middleware"); // Fix import statement
 const router = express.Router();
@@ -12,5 +14,7 @@ router.post("/signup", signup);
 // SIGN IN
 router.post("/signin", signin);
 router.delete("/del/:id", checkAdmin, delFaculty);
+router.get("/getfaculty/email", getFacultyByEmail);
+router.get("/getfaculty/getNamelist", getFacultyNameList);
 
 module.exports = router;

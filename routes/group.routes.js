@@ -15,6 +15,8 @@ const {
   getGroup,
   getGroupWithId,
   getGroupsByCriteria,
+  updateGuide,
+  getApprovedGroup,
   //   getProject,
   //   delProject,
   //   updStatus,
@@ -29,6 +31,10 @@ router.get(
   "/groupsList/get/:academic/:currentYear/:subject/:semester",
   getGroupsByCriteria
 );
+router.get(
+  "/groupsList/get/approved/:academic/:currentYear/:subject/:semester/:guideId",
+  getApprovedGroup
+);
 router.get("/get/:memberId/:semester", getGroupWithId);
 // router.get("/getApproved", getApproved);
 // router.get("/get/:id", getProject);
@@ -41,7 +47,9 @@ router.post("/add", addGroup); // here i have to check user too
 // router.post("/getAll", getAllGroup); // here i have to check user too
 // router.post("/getAll", getAllGroup); // here i have to check user too
 router.get("/get/:id", getGroup); // here i have to check user too
-router.put("/updateStatus/:id", checkFaculty, updateStatus);
+// router.get("/get/approved/:id", getApprovedGroup); // here i have to check user too
+router.put("/updateStatus/:id/status", checkFaculty, updateStatus);
+router.put("/update/guide/:groupId/:guideId/name", updateGuide);
 // router.put("/updateStatus/:id", checkFaculty, updateStatus);
 // router.put("/upd/status/:id/status", updStatus);
 router.delete("/del/:id", checkFaculty, delGroup); // checkUser must be there

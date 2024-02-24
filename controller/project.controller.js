@@ -115,9 +115,9 @@ const updateProjectStatus = async (req, res, next) => {
     // Get project id
     const projectId = req.params.id;
     const status = req.params.status;
+
     console.log(projectId);
     console.log(req.body);
-
     // her we have to set the faculty id once the project get approved and status become false
 
     const updateProjectStatus = await ProjectIdea.findByIdAndUpdate(

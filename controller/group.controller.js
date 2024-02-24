@@ -81,10 +81,43 @@ const getGroup = async (req, res, next) => {
     next(CustomError(500, error));
   }
 };
+``;
+// GET getApprovedGroup
+const getApprovedGroup = async (req, res, next) => {
+  try {
+    const { currentYear, semester, academicYear, subject, guideId } =
+      req.params;
+    // Construct the query object based on the provided criteria
+    const query = {};
+    if (!guideId) {
+      CustomError(404, "Guide Id Not Found");
+    } else {
+      // Add each criteria to the query object if it's provided
+      if (currentYear) query.currentYear = currentYear;
+      if (semester) query.semester = semester;
+      if (academicYear) query.academicYear = academicYear;
+      if (subject) query.subject = subject;
+      if (subject) query.guideId = guideId;
+      const groups = await Group.find(query).lean();
+      if (!groups || groups.length === 0) {
+        return next(
+          CustomError(404, "No groups found for the provided criteria")
+        );
+      }
+      res.status(200).json({
+        message: "Groups fetched successfully",
+        data: groups,
+      });
+    }
+  } catch (error) {
+    next(CustomError(500, error));
+  }
+};
 
 const updateStatus = async (req, res, next) => {
   try {
     const groupId = req.params.id;
+    const groupStatus = req.query.status;
     const { guideId, guideName, approvedProjectId, projectStatus } = req.body;
     const isProjectApproved = projectStatus === "Approved"; // Simplify boolean assignment
 
@@ -97,7 +130,33 @@ const updateStatus = async (req, res, next) => {
         approvedProjectId,
         projectStatus,
         isProjectApproved,
+        groupStatus: groupStatus,
       },
+      { new: true, runValidators: true } // Add runValidators option to validate schema
+    );
+
+    if (!updatedGroup) {
+      return next(CustomError(404, "Group not found")); // Use return to stop execution
+    }
+
+    res
+      .status(200)
+      .json({ message: "Group updated successfully", data: updatedGroup });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error")); // Use error.message for more detailed error
+  }
+};
+const updateGuide = async (req, res, next) => {
+  try {
+    const guideId = req.params.guideId;
+    const groupId = req.params.groupId;
+    const guideName = req.query.name;
+    console.log(guideId, groupId, guideName);
+
+    // Use Group model instead of Project model for findByIdAndUpdate
+    const updatedGroup = await Group.findByIdAndUpdate(
+      groupId,
+      { guideId: guideId, guideName: guideName },
       { new: true, runValidators: true } // Add runValidators option to validate schema
     );
 
@@ -209,4 +268,6 @@ module.exports = {
   delGroup,
   getGroupsByCriteria,
   getGroupWithId,
+  getApprovedGroup,
+  updateGuide,
 };
