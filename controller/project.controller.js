@@ -46,6 +46,19 @@ const getAllProject = async (req, res, next) => {
     next(CustomError(500, error.message || "Internal Server Error"));
   }
 };
+const getProject = async (req, res, next) => {
+  try {
+    const projectIdeaId = req.params.id;
+    const projectIdea = await ProjectIdea.findById(projectIdeaId);
+
+    res.status(200).json({
+      message: "Project Idea fetched successfully",
+      data: projectIdea,
+    });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
 
 const getProjectByGroupId = async (req, res, next) => {
   try {
@@ -149,6 +162,7 @@ module.exports = {
   getAllProject,
   updateProject,
   delProject,
+  getProject,
   updateProjectStatus,
   getProjectByGroupId,
 };

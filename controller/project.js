@@ -1,17 +1,39 @@
 const Student = require("../Schema/Student");
 const CustomError = require("../utils/error");
 const Project = require("../Schema/Project");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dugze0fjd",
+  api_key: "213166633228694",
+  api_secret: "10MYFnSBAUwlWXthZrRIkhgCHDU",
+});
 
 // creating user video
 const addProject = async (req, res, next) => {
   try {
-    const userId = "dummyUser123"; //received from middleware i.e from token
-    const project = await new Project({ userId: userId, ...req.body });
-    await project.save();
+    if (!req.files || !req.files.photos) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
+    const files = Array.isArray(req.files.photos)
+      ? req.files.photos
+      : [req.files.photos];
+    const userId = "dummyUser123";
+    const imageUrls = [];
+
+    for (const file of files) {
+      const result = await cloudinary.uploader.upload(file.tempFilePath);
+      imageUrls.push(result.secure_url);
+    }
+
+    const projectData = { userId: userId, ...req.body, image: imageUrls };
+    const project = await Project.create(projectData);
+
     res
       .status(200)
-      .json({ message: "project uploaded successfully", data: project });
-    console.log("project uploaded subcessfully");
+      .json({ message: "Project uploaded successfully", data: project });
+    console.log("Project uploaded successfully");
   } catch (error) {
     next(CustomError(500, error));
   }

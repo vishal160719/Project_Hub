@@ -117,20 +117,25 @@ const getApprovedGroup = async (req, res, next) => {
 const updateStatus = async (req, res, next) => {
   try {
     const groupId = req.params.id;
+    let projId = req.params.projId;
     const groupStatus = req.query.status;
-    const { guideId, guideName, approvedProjectId, projectStatus } = req.body;
-    const isProjectApproved = projectStatus === "Approved"; // Simplify boolean assignment
+    // if (groupStatus === "Approved") {
+    //   projId = req.params.projId;
+    // }
+
+    // const { guideId, guideName, approvedProjectId, projectStatus } = req.body;
+    const isProjectApproved = groupStatus === "Approved"; // Simplify boolean assignment
 
     // Use Group model instead of Project model for findByIdAndUpdate
     const updatedGroup = await Group.findByIdAndUpdate(
       groupId,
       {
-        guideId, // Object shorthand notation
-        guideName,
-        approvedProjectId,
-        projectStatus,
+        // guideId, // Object shorthand notation
+        // guideName,
+        approvedProjectId: projId,
+        // projectStatus,
         isProjectApproved,
-        groupStatus: groupStatus,
+        projectStatus: groupStatus,
       },
       { new: true, runValidators: true } // Add runValidators option to validate schema
     );
@@ -229,25 +234,19 @@ const getGroupsByCriteria = async (req, res, next) => {
 };
 const getGroupWithId = async (req, res, next) => {
   try {
-    let { semester, memberId } = req.params;
-    semester = parseInt(semester); // Convert to integer if necessary
-    memberId = memberId.trim().toString(); // Trim memberId and parse to string
-    console.log(semester, memberId);
+    let { memberId } = req.params;
+    // memberId = memberId.trim().toString();
 
     const query = {
-      semester: semester,
-      membersId: {
-        $elemMatch: { $eq: [memberId] },
-      },
+      membersId: { $in: [memberId] },
     };
+
     console.log("Query:", JSON.stringify(query));
 
     const groups = await Group.find(query).lean();
 
     if (!groups || groups.length === 0) {
-      return next(
-        CustomError(404, "No groups found for the provided criteria")
-      );
+      return next(CustomError(404, "No groups found "));
     }
 
     res.status(200).json({

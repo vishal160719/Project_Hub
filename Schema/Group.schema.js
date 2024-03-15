@@ -11,12 +11,8 @@ const groupSchema = new Schema(
     },
 
     membersId: {
-      type: [
-        {
-          type: [String],
-          ref: "Student", // Reference to the User model
-        },
-      ],
+      type: [String],
+      ref: "Student", // Reference to the User model
       required: true,
     },
     groupLeaderId: {

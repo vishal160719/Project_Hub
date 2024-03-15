@@ -35,11 +35,11 @@ const projectSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      // required: true,
     },
     description: {
       type: String,
-      required: true,
+      // required: true,
     },
     pdfLinks: {
       type: [String],
@@ -61,22 +61,22 @@ const projectSchema = new Schema(
     currentYear: {
       // SE , FE , TE , BE
       type: String,
-      required: true,
+      // required: true,
     },
     semester: {
       // 1,2,3,4,5,6,6,
       type: Number,
-      required: true,
+      // required: true,
     },
     academicYear: {
       // 2023-2024
       type: String,
-      required: true,
+      // required: true,
     },
     subject: {
       // Manet , IOE
       type: String,
-      required: true,
+      // required: true,
     },
     isApproved: {
       // should be done by faculty only
@@ -85,11 +85,11 @@ const projectSchema = new Schema(
     },
     keywords: {
       type: [String],
-      required: true,
+      // required: true,
       default: [],
     },
     studentId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: "Student", // Assuming you have a User model, replace 'User' with the actual model name
       default: null, // Set default to null or another ObjectId if needed
     },
@@ -101,6 +101,10 @@ const projectSchema = new Schema(
     sName: {
       type: String,
       default: "",
+    },
+    image: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

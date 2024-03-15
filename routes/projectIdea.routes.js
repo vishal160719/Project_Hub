@@ -12,6 +12,7 @@ const {
   updateProject,
   updateProjectStatus,
   getProjectByGroupId,
+  getProject,
   //   getProject,
   delProject,
   //   updStatus,
@@ -22,7 +23,7 @@ const {
 } = require("../controller/project.controller.js");
 
 router.get("/getAll", getAllProject);
-// router.get("/getApproved", getApproved);
+router.get("/get/:id", getProject);
 // router.get("/get/:id", getProject);
 // router.get("/get/user/:id", getUserProject);
 // router.get("/get/project/unapproved", getUnapproved);

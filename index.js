@@ -5,13 +5,19 @@ const cors = require("cors");
 const app = express();
 const routes = require("./routes/index.routes.js");
 const authRoutes = require("./routes/auth");
+
 var cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 app.get("/cors", (req, res) => {
   res.set("Access-Control-Allow-Origin", "*");
   res.send({ msg: "This has CORS enabled 🎈" });
 });
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
 //middelewar
 app.use(cors());
 app.use(cookieParser());
@@ -21,6 +27,7 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 app.use("/api", routes);
+
 // app.use("/api", authRoutes);
 // app.use("/api/videos", authVideos);
 // app.use("/api/comments", authComments);
