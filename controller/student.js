@@ -1,68 +1,97 @@
-const Students = require("../Schema/Student.js");
-const bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
+const Students = require('../Schema/Student');
 
+// Controller function to create a new student
 const createStudent = async (req, res, next) => {
   try {
-    // user  has created and data passed to the models
-    console.log(req.body.name, req.body.email, req.body.password);
-    var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync(req.body.password, salt);
-    const newUser = new User({ ...req.body, password: hash }); // ading value to the schema
+    const {
+      name,
+      email,
+      password,
+      currentYear,
+      semester,
+      startingYear,
+      passingYear,
+      branch,
+      studentId,
+      projectRecord,
+      aboutMe
+    } = req.body;
 
-    await newUser.save();
-    res.status(200).send("user created sucessfully!!");
-    console.log("user created sucessfully");
+    // Create a new student instance
+    const newStudent = new Students({
+      name,
+      email,
+      password,
+      currentYear,
+      semester,
+      startingYear,
+      passingYear,
+      branch,
+      studentId,
+      projectRecord,
+      aboutMe
+    });
+
+    // Save the new student to the database
+    await newStudent.save();
+
+    res.status(201).json({ success: true, message: 'Student created successfully' });
   } catch (error) {
     next(error);
   }
 };
 
+// Controller function to update an existing student
 const updateStudent = async (req, res, next) => {
   try {
-    // findone is the method of mongodb
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) return next(createError(404, "User not found!!"));
-    const pass = await bcrypt.compare(req.body.password, user.password); // true
-    if (!pass) return next(createError(400, "Wrong Credentials"));
-    else console.log("user loggedIn sucesfully!!");
-    const token = jwt.sign({ id: user._id }, process.env.JWT);
-    const { password, ...otherDetails } = user._doc;
-    res
-      .cookie("access_token", token, { httpOnly: true })
-      .status(200)
-      .json({ ...otherDetails });
-    console.log(token);
+    const { id } = req.params; // Assuming you are passing the student ID in the URL
+
+    // Find the student by ID and update its details
+    await Students.findByIdAndUpdate(id, req.body);
+
+    res.status(200).json({ success: true, message: 'Student updated successfully' });
   } catch (error) {
     next(error);
   }
 };
+
+// Controller function to delete an existing student
 const deleteStudent = async (req, res, next) => {
   try {
-    // findone is the method of mongodb
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) return next(createError(404, "User not found!!"));
-    const pass = await bcrypt.compare(req.body.password, user.password); // true
-    if (!pass) return next(createError(400, "Wrong Credentials"));
-    else console.log("user loggedIn sucesfully!!");
-    const token = jwt.sign({ id: user._id }, process.env.JWT);
-    const { password, ...otherDetails } = user._doc;
-    res
-      .cookie("access_token", token, { httpOnly: true })
-      .status(200)
-      .json({ ...otherDetails });
-    console.log(token);
+    const { id } = req.params; // Assuming you are passing the student ID in the URL
+
+    // Find the student by ID and delete it
+    await Students.findByIdAndDelete(id);
+
+    res.status(200).json({ success: true, message: 'Student deleted successfully' });
   } catch (error) {
     next(error);
   }
 };
 
+const getStudentById = async (req, res, next) => {
+  try {
+    const studentId = req.params.id; // Get student ID from request parameters
 
-// Export both functions as an object
+    // Find the student by ID in the database
+    const student = await Students.findById(studentId);
+
+    if (!student) {
+      // If student with the given ID is not found, return 404 Not Found
+      return res.status(404).json({ success: false, message: "Student not found" });
+    }
+
+    // If student is found, return the student data
+    res.status(200).json({ success: true, data: student });
+  } catch (error) {
+    // If any error occurs, pass it to the error handling middleware
+    next(error);
+  }
+};
+
 module.exports = {
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
+  getStudentById
 };
