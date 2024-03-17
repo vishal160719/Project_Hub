@@ -38,7 +38,7 @@ const projectSchema = new Schema(
       // required: true,
     },
     description: {
-      type: String,
+      type: String, 
       // required: true,
     },
     pdfLinks: {
@@ -88,12 +88,12 @@ const projectSchema = new Schema(
       // required: true,
       default: [],
     },
-    studentId: {
+    studentObjId: {
       type: String,
       ref: "Student", // Assuming you have a User model, replace 'User' with the actual model name
       default: null, // Set default to null or another ObjectId if needed
     },
-    facultyId: {
+    facultyObjId: {
       type: Schema.Types.ObjectId,
       ref: "Faculty", // Assuming you have a User model, replace 'User' with the actual model name
       default: null,

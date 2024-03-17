@@ -3,16 +3,33 @@ const CustomError = require("../utils/error");
 // Create a new task
 const createTask = async (req, res, next) => {
   try {
-    const { title, description, assignedDate, deadline, isApproved , facultyId,
-        groupId} = req.body;
+    const {
+      title,
+      description,
+      assignedDate,
+      deadline,
+      taskStatus,
+      facultyId,
+      groupId,
+      academicYear,
+      subject,
+      semester,
+      currentYear,
+      taskType,
+    } = req.body;
     const newTask = new Task({
       title,
       description,
       assignedDate,
       deadline,
-      isApproved,
+      taskStatus,
+      taskType,
       facultyId,
-      groupId
+      groupId,
+      academicYear,
+      subject,
+      semester,
+      currentYear,
     });
     await newTask.save();
     res.status(201).json({
@@ -28,6 +45,68 @@ const createTask = async (req, res, next) => {
 const getAllTasks = async (req, res, next) => {
   try {
     const tasks = await Task.find();
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      data: tasks,
+    });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
+const getTaskCriteria = async (req, res, next) => {
+  try {
+    const { currentYear, academicYear, semester, subject } = req.params;
+    console.log(currentYear, academicYear, semester, subject);
+    const taskType = "All";
+    const tasks = await Task.find({
+      currentYear,
+      academicYear,
+      semester,
+      subject,
+      taskType,
+    });
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      data: tasks,
+    });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
+const getTaskCriteriaAll = async (req, res, next) => {
+  try {
+    const { currentYear, academicYear, semester, subject, facultyId } =
+      req.params;
+    console.log(currentYear, academicYear, semester, subject, facultyId);
+    // const taskType = "All";
+    const tasks = await Task.find({
+      currentYear,
+      academicYear,
+      semester,
+      subject,
+      facultyId,
+    });
+    res.status(200).json({
+      message: "Tasks fetched successfully",
+      data: tasks,
+    });
+  } catch (error) {
+    next(CustomError(500, error.message || "Internal Server Error"));
+  }
+};
+const getTaskByGroupId = async (req, res, next) => {
+  try {
+    const { currentYear, academicYear, semester, subject, groupId } =
+      req.params;
+    console.log(currentYear, academicYear, semester, subject);
+    const taskType = "All";
+    const tasks = await Task.find({
+      currentYear,
+      academicYear,
+      semester,
+      subject,
+      groupId: { $in: [groupId] },
+    });
     res.status(200).json({
       message: "Tasks fetched successfully",
       data: tasks,
@@ -100,31 +179,31 @@ const deleteTaskById = async (req, res, next) => {
 };
 
 const updateApprovalStatus = async (req, res, next) => {
-    try {
-      const taskId = req.params.id;
-      const { isApproved } = req.body;
-  
-      // Validate input
-      if (typeof isApproved !== 'boolean') {
-        return res.status(400).json({ success: false, message: "Invalid value for isApproved field" });
-      }
-  
-      // Update the task
-      const updatedTask = await Task.findByIdAndUpdate(
-        taskId,
-        { isApproved },
-        { new: true }
-      );
-  
-      if (!updatedTask) {
-        return res.status(404).json({ success: false, message: "Task not found" });
-      }
-  
-      res.status(200).json({ success: true, message: "Task approval status updated successfully", data: updatedTask });
-    } catch (error) {
-      next(error);
+  try {
+    const taskId = req.params.id;
+    const { taskStatus } = req.body;
+    // Update the task
+    const updatedTask = await Task.findByIdAndUpdate(
+      taskId,
+      { taskStatus },
+      { new: true }
+    );
+
+    if (!updatedTask) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
     }
-  };
+
+    res.status(200).json({
+      success: true,
+      message: "Task approval status updated successfully",
+      data: updatedTask,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createTask,
@@ -132,5 +211,8 @@ module.exports = {
   getTaskById,
   updateTaskById,
   deleteTaskById,
-  updateApprovalStatus
+  getTaskCriteria,
+  updateApprovalStatus,
+  getTaskByGroupId,
+  getTaskCriteriaAll,
 };

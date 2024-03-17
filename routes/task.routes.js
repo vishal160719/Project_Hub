@@ -7,11 +7,14 @@ const {
 } = require("../middleware/auth.middleware.js"); // Fix import statement
 
 const {
-    createTask,
-    updateTaskById,
-    getAllTasks,
-    deleteTaskById,
-    updateApprovalStatus
+  createTask,
+  updateTaskById,
+  getAllTasks,
+  getTaskCriteria,
+  deleteTaskById,
+  updateApprovalStatus,
+  getTaskCriteriaAll,
+  getTaskByGroupId,
 } = require("../controller/task.controller.js");
 
 router.get("/getAll", getAllTasks);
@@ -25,6 +28,23 @@ router.get("/getAll", getAllTasks);
 router.post("/add", createTask); // here i have to check user too
 router.put("/update/:id", updateTaskById);
 router.put("/updateStatus/:id", updateApprovalStatus);
+// checking the taskType
+router.get(
+  "/getTaskByCriteria/:academicYear/:currentYear/:semester/:subject",
+  getTaskCriteria
+);
+// checking facultyID --> for faculty side
+router.get(
+  "/getTaskByCriteriaAll/:academicYear/:currentYear/:semester/:subject/:facultyId",
+  getTaskCriteriaAll
+);
+
+// for studentside
+router.get(
+  "/getTaskByCriteria/:academicYear/:currentYear/:semester/:subject/:groupId",
+  getTaskByGroupId
+); // getting task assigned to all
+// get tsk by faculty id a and currY , academic , sem , subje
 // router.put("/upd/status/:id/status", updStatus);
 router.delete("/del/:id", deleteTaskById); // checkUser must be there
 // router.put("/upd/:id", updProject);

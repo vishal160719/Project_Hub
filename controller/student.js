@@ -1,4 +1,4 @@
-const Students = require('../Schema/Student');
+const Students = require("../Schema/Student");
 
 // Controller function to create a new student
 const createStudent = async (req, res, next) => {
@@ -14,7 +14,7 @@ const createStudent = async (req, res, next) => {
       branch,
       studentId,
       projectRecord,
-      aboutMe
+      aboutMe,
     } = req.body;
 
     // Create a new student instance
@@ -29,13 +29,15 @@ const createStudent = async (req, res, next) => {
       branch,
       studentId,
       projectRecord,
-      aboutMe
+      aboutMe,
     });
 
     // Save the new student to the database
     await newStudent.save();
 
-    res.status(201).json({ success: true, message: 'Student created successfully' });
+    res
+      .status(201)
+      .json({ success: true, message: "Student created successfully" });
   } catch (error) {
     next(error);
   }
@@ -45,11 +47,14 @@ const createStudent = async (req, res, next) => {
 const updateStudent = async (req, res, next) => {
   try {
     const { id } = req.params; // Assuming you are passing the student ID in the URL
+    const { aboutme, skills } = req.body;
 
     // Find the student by ID and update its details
-    await Students.findByIdAndUpdate(id, req.body);
+    await Students.findByIdAndUpdate(id, { aboutme, skills });
 
-    res.status(200).json({ success: true, message: 'Student updated successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Student updated successfully" });
   } catch (error) {
     next(error);
   }
@@ -63,7 +68,9 @@ const deleteStudent = async (req, res, next) => {
     // Find the student by ID and delete it
     await Students.findByIdAndDelete(id);
 
-    res.status(200).json({ success: true, message: 'Student deleted successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Student deleted successfully" });
   } catch (error) {
     next(error);
   }
@@ -78,7 +85,9 @@ const getStudentById = async (req, res, next) => {
 
     if (!student) {
       // If student with the given ID is not found, return 404 Not Found
-      return res.status(404).json({ success: false, message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
     // If student is found, return the student data
@@ -93,5 +102,5 @@ module.exports = {
   createStudent,
   updateStudent,
   deleteStudent,
-  getStudentById
+  getStudentById,
 };

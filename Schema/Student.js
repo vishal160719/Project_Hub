@@ -97,10 +97,14 @@ const StudentSchema = new Schema({
     type: [ProjectRecordSchema],
     default: [],
   },
-  aboutme:{
-    type:String,
-    default:"Hii im Software developer"
-  }
+  skills: {
+    type: [String],
+    default: [],
+  },
+  aboutme: {
+    type: String,
+    default: "Hii im Software developer",
+  },
 });
 
 const Student = mongoose.model("Student", StudentSchema);

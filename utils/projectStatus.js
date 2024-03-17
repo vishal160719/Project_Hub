@@ -5,4 +5,4 @@ const ProjectStatus = {
   Improvement: "Improvement",
 };
 
-module.exports =  ProjectStatus ;
+module.exports = ProjectStatus;

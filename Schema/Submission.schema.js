@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const { taskStatus, taskType } = require("../utils/taskStatus.js");
 
-const TaskSchema = new Schema(
+const SubmissionSchema = new Schema(
   {
     title: {
       type: String,
@@ -70,6 +70,6 @@ const TaskSchema = new Schema(
   { timestamps: true }
 );
 
-const Task = mongoose.model("TaskAssigned", TaskSchema);
+const Submissions = mongoose.model("Submissions", SubmissionSchema);
 
-module.exports = Task;
+module.exports = Submissions;
