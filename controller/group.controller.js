@@ -14,6 +14,7 @@ const addGroup = async (req, res, next) => {
       semester,
       academicYear,
       currentYear,
+      guideId,
     } = req.body; //received from middleware
     const groupData = await Group.find({
       membersId,
@@ -23,6 +24,7 @@ const addGroup = async (req, res, next) => {
       semester,
       academicYear,
       currentYear,
+      guideId,
     });
     if (groupData.length != 0) {
       next(CustomError(500, "Group Already Exist Already exist"));
@@ -37,6 +39,7 @@ const addGroup = async (req, res, next) => {
         subject,
         semester,
         academicYear,
+        guideId,
         currentYear,
       });
       await groupDetails.save();
@@ -81,7 +84,91 @@ const getGroup = async (req, res, next) => {
     next(CustomError(500, error));
   }
 };
-``;
+
+// const getGroupMembers = async (req, res, next) => {
+//   try {
+//     // const { currentYear, semester } = req.body; // received from middleware
+//     const { currentYear, semester, academicYear, subject, guideId } =
+//       req.params;
+//     // Fetch subjects based on currentYear and semester
+//     const groupData = await Group.find({
+//       currentYear,
+//       semester,
+//       academicYear,
+//       subject,
+//       guideId,
+//     });
+//     console.log("subdata", groupData);
+
+//     if (groupData.length === 0) {
+//       next(CustomError(500, "groups does not exist"));
+//     } else {
+//       try {
+//         const groupMembersName = groupData.map(
+//           (groupData) => groupData.membersName
+//         );
+//         const groupId = groupData._id;
+//         res.status(201).json({
+//           success: true,
+//           message: "Semester subject data fetched",
+//           data: { groupMembersName, groupId },
+//         });
+//       } catch (error) {
+//         next(CustomError(404, error));
+//       }
+//     }
+//   } catch (error) {
+//     next(CustomError(500, error));
+//   }
+// };
+
+const getGroupMembers = async (req, res, next) => {
+  try {
+    const { currentYear, semester, academicYear, subject, guideId } =
+      req.params;
+
+    // Construct the query object based on the provided criteria
+    const query = {};
+
+    // Add each criteria to the query object if it's provided
+    if (currentYear) query.currentYear = currentYear;
+    if (semester) query.semester = semester;
+    if (academicYear) query.academicYear = academicYear;
+    if (subject) query.subject = subject;
+    if (guideId) query.guideId = guideId;
+
+    const groupData = await Group.find(query).lean();
+    console.log(groupData);
+
+    if (!groupData || groupData.length === 0) {
+      return next(CustomError(404, "No groups found"));
+    } else {
+      try {
+        const groupDetails = groupData.map((group) => ({
+          groupMembersName: group.membersName,
+          groupId: group._id, // Accessing groupId within the map function
+        }));
+
+        res.status(201).json({
+          success: true,
+          message: "Semester subject data fetched",
+          data: groupDetails,
+        });
+      } catch (error) {
+        next(CustomError(404, error));
+      }
+    }
+
+    // You may want to remove this unreachable code
+    // res.status(200).json({
+    //   message: "Groups fetched successfully",
+    //   data: groups,
+    // });
+  } catch (error) {
+    next(CustomError(500, error));
+  }
+};
+
 // GET getApprovedGroup
 const getApprovedGroup = async (req, res, next) => {
   try {
@@ -269,4 +356,5 @@ module.exports = {
   getGroupWithId,
   getApprovedGroup,
   updateGuide,
+  getGroupMembers,
 };
