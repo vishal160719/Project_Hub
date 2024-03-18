@@ -15,9 +15,11 @@ const {
   updateApprovalStatus,
   getTaskCriteriaAll,
   getTaskByGroupId,
+  getTaskById
 } = require("../controller/task.controller.js");
 
 router.get("/getAll", getAllTasks);
+router.get("/getTaskById/:id", getTaskById);
 // router.get("/getApproved", getApproved);
 // router.get("/get/:id", getProject);
 // router.get("/get/user/:id", getUserProject);

@@ -44,7 +44,7 @@ const TaskSchema = new Schema(
     },
     deadline: {
       type: Date, // Change type to Date
-      required: [true, "deadline is required"],
+      // required: [true, "deadline is required"],
     },
     taskStatus: {
       type: String,
