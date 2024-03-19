@@ -43,7 +43,7 @@ router.get(
 
 // for studentside
 router.get(
-  "/getTaskByCriteria/:academicYear/:currentYear/:semester/:subject/:groupId",
+  "/getTaskByCriteria/:groupId/:currentYear/:academicYear/:semester/:subject/:facultyId",
   getTaskByGroupId
 ); // getting task assigned to all
 // get tsk by faculty id a and currY , academic , sem , subje

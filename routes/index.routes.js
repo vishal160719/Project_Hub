@@ -8,6 +8,7 @@ const groupRoutes = require("./group.routes.js");
 const projectIdeaRoutes = require("./projectIdea.routes.js");
 const task = require("./task.routes.js");
 const student = require("./student.js");
+const submission = require("./submission.js");
 
 const router = Router();
 router.use("/auth", authRoutes);
@@ -19,5 +20,6 @@ router.use("/group", groupRoutes);
 router.use("/projectIdea", projectIdeaRoutes);
 router.use("/task", task);
 router.use("/student", student);
+router.use("/submission", submission);
 
 module.exports = router;

@@ -96,7 +96,7 @@ const getTaskCriteriaAll = async (req, res, next) => {
 };
 const getTaskByGroupId = async (req, res, next) => {
   try {
-    const { currentYear, academicYear, semester, subject, groupId } =
+    const { currentYear, academicYear, semester, subject, groupId,facultyId } =
       req.params;
     console.log(currentYear, academicYear, semester, subject);
     const taskType = "All";
@@ -105,6 +105,7 @@ const getTaskByGroupId = async (req, res, next) => {
       academicYear,
       semester,
       subject,
+      facultyId,
       groupId: { $in: [groupId] },
     });
     res.status(200).json({

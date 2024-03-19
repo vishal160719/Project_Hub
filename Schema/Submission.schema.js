@@ -4,12 +4,6 @@ const { taskStatus, taskType } = require("../utils/taskStatus.js");
 
 const SubmissionSchema = new Schema(
   {
-    title: {
-      type: String,
-      trim: true,
-      maxLength: [150, "title should not exceed 150 character"],
-      required: [true, "title is required"],
-    },
     subject: {
       type: String,
       trim: true,
@@ -38,23 +32,16 @@ const SubmissionSchema = new Schema(
       type: String,
       trim: true,
     },
-    assignedDate: {
-      type: Date, // Change type to Date
-      required: [true, "assignedDate is required"],
+    pdfLink: {
+      type: String,
     },
-    deadline: {
-      type: Date, // Change type to Date
-      required: [true, "deadline is required"],
+    githubLink: {
+      type: String,
     },
     taskStatus: {
       type: String,
       enum: Object.values(taskStatus),
       default: taskStatus.Pending,
-    },
-    taskType: {
-      type: String,
-      enum: Object.values(taskType),
-      default: taskType.All,
     },
     groupId: {
       type: [mongoose.Schema.Types.ObjectId],
@@ -62,6 +49,11 @@ const SubmissionSchema = new Schema(
       default: null,
     },
     facultyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Faculty",
+      default: null,
+    },
+    taskId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Faculty",
       default: null,
