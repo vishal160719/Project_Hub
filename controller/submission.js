@@ -13,6 +13,19 @@ const createSubmission = async (req, res, next) => {
     next(error);
   }
 };
+const getSubmissionTaskId = async (req, res, next) => {
+  try {
+    const taskId = req.params.id;
+    const submissionList = await Submissions.find({taskId});
+    res.status(201).json({
+      success: true,
+      message: "Submission Fetched",
+      data: submissionList,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Controller to update an existing submission
 const updateSubmission = async (req, res, next) => {
@@ -61,5 +74,5 @@ const deleteSubmission = async (req, res, next) => {
 module.exports = {
   createSubmission,
   updateSubmission,
-  deleteSubmission,
+  deleteSubmission,getSubmissionTaskId
 };
