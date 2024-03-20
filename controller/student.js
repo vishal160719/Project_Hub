@@ -47,10 +47,10 @@ const createStudent = async (req, res, next) => {
 const updateStudent = async (req, res, next) => {
   try {
     const { id } = req.params; // Assuming you are passing the student ID in the URL
-    const { aboutme, skills } = req.body;
+    const { aboutMe, skills ,startingYear,passingYear,branch} = req.body;
 
     // Find the student by ID and update its details
-    await Students.findByIdAndUpdate(id, { aboutme, skills });
+    await Students.findByIdAndUpdate(id, { aboutMe, skills,startingYear,passingYear,branch});
 
     res
       .status(200)

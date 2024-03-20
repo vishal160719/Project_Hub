@@ -101,7 +101,7 @@ const StudentSchema = new Schema({
     type: [String],
     default: [],
   },
-  aboutme: {
+  aboutMe: {
     type: String,
     default: "Hii im Software developer",
   },
