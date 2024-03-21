@@ -44,7 +44,7 @@ const SubmissionSchema = new Schema(
       default: taskStatus.Pending,
     },
     groupId: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Group", // Re ference to the Group model
       default: null,
     },
