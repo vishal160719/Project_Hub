@@ -14,8 +14,10 @@ const signup = async (req, res, next) => {
       password,
       startingYear,
       passingYear,
+      currentYear,
       branch,
       studentId,
+      academicYear
     } = req.body;
     console.log(
       "server  reg ",
@@ -25,7 +27,8 @@ const signup = async (req, res, next) => {
       startingYear,
       passingYear,
       branch,
-      studentId
+      studentId,
+      academicYear
     );
 
     const existingFaculty = await Student.findOne({ email });
@@ -48,8 +51,10 @@ const signup = async (req, res, next) => {
       password: hash,
       startingYear,
       passingYear,
+      currentYear,
       branch,
       studentId,
+      academicYear
     });
 
     await newStudent.save();
@@ -65,12 +70,12 @@ const signup = async (req, res, next) => {
 
 const signin = async (req, res, next) => {
   try {
-    const { email, password, currentYear, year } = req.body;
+    const { email, password, currentYear, academicYear } = req.body;
 
     console.log("Request Body:", req.body);
 
     // validation
-    if (!email || !password || !currentYear || !year) {
+    if (!email || !password || !currentYear || !academicYear) {
       throw CustomError("Please fill all the fields", 400);
     }
 

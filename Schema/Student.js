@@ -64,6 +64,9 @@ const StudentSchema = new Schema({
     type: Number,
     // required: [true, "Number is required"],
   },
+  academicYear:{
+    type:String
+  },
   // academicYear: {
   //   // 2023-2024
   //   type: String,
@@ -72,16 +75,16 @@ const StudentSchema = new Schema({
   startingYear: {
     // 2020
     type: Number,
-    required: [true, "Joining Year  is required"],
+    // required: [true, "Joining Year  is required"],
   },
   passingYear: {
     // 2024
     type: Number,
-    required: [true, "Passing Year  is required"],
+    // required: [true, "Passing Year  is required"],
   },
   branch: {
     type: String,
-    required: [true, "Branch  is required"],
+    // required: [true, "Branch  is required"],
   },
   role: {
     type: String,
@@ -91,7 +94,7 @@ const StudentSchema = new Schema({
   studentId: {
     // 201994101
     type: String,
-    required: true,
+    // required: true,
   },
   projectRecord: {
     type: [ProjectRecordSchema],
